@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="ro" spellcheck="false">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMF Registru Medical</title>
+    <style>
+        /* ==================== CSS VARIABLES ==================== */
+        :root {
+            /* Colors */
+            --color-blue: #2563EB;
+            --color-blue-hover: #1D4ED8;
+            --color-green: #10B981;
+            --color-green-hover: #059669;
+            --color-purple: #8B5CF6;
+            --color-purple-hover: #7C3AED;
+            --color-yellow: #F59E0B;
+            --color-yellow-hover: #D97706;
+            --color-red: #EF4444;
+            --color-red-hover: #DC2626;
+            --color-white: #FFFFFF;
+            --color-grey: #f3f3f3;
+            --color-black: #000000;
+            --color-border: #E5E7EB;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 20px;
+
+            /* Font Sizes */
+            --font-size-md: 18px;
+            --font-size-lg: 20px;
+            --font-size-xl: 30px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-round: 50%;
+
+            /* Transitions */
+            --transition-fast: all 0.2s ease;
+            --transition-normal: all 0.3s ease;
+        }
+
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+            background-color: #F5F7F9;
+            padding-top: 90px;
+            overflow-x: hidden;
+            color: var(--color-black);
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        /* ==================== TYPOGRAPHY ==================== */
+        .section-title {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--color-black);
+            font-size: var(--font-size-lg);
+        }
+
+        .section3-label {
+            font-weight: 600;
+            color: var(--color-black);
+            font-size: var(--font-size-lg);
+            white-space: nowrap;
+        }
+
+        .form-checkbox-label {
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            color: var(--color-black);
+        }
+
+        .page-info {
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            color: var(--color-black);
+            text-align: center;
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--color-border);
+            width: 100px;
+            height: 50px;
+            align-content: center;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-lg);
+            font-weight: bold;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--color-white);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            width: 175px;
+            height: 55px;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: var(--radius-round);
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:active::after {
+            animation: ripple 0.6s ease-out;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn svg {
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+            height: 30px;
+            width: 30px;
+        }
+
+        .btn-refresh {
+            background: var(--color-blue);
+        }
+
+        .btn-refresh:hover {
+            background: var(--color-blue-hover);
+        }
+
+        .btn-save {
+            background: var(--color-green);
+        }
+
+        .btn-save:hover {
+            background: var(--color-green-hover);
+        }
+
+        .btn-search {
+            background: var(--color-purple);
+        }
+
+        .btn-search:hover {
+            background: var(--color-purple-hover);
+        }
+
+        .btn-export {
+            background: var(--color-green);
+        }
+
+        .btn-export:hover {
+            background: var(--color-green-hover);
+        }
+
+        .btn-report {
+            background: var(--color-yellow);
+        }
+
+        .btn-report:hover {
+            background: var(--color-yellow-hover);
+        }
+
+        .btn-delete {
+            background: var(--color-red);
+        }
+
+        .btn-delete:hover {
+            background: var(--color-red-hover);
+        }
+
+        /* ==================== PAGE NAVIGATION ==================== */
+        .page-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--color-grey);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .page-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--color-white);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--color-black);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .page-btn:hover {
+            background: var(--color-blue);
+            border-color: var(--color-blue);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .page-btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .page-btn svg {
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            height: 25px;
+            width: 25px;
+        }
+
+        /* ==================== TOOLBAR ==================== */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: var(--color-white);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-sm);
+            z-index: 1000;
+            border-bottom: 2px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toolbar-left,
+        .toolbar-center,
+        .toolbar-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .toolbar-left {
+            justify-content: flex-start;
+        }
+
+        .toolbar-center {
+            justify-content: center;
+        }
+
+        .toolbar-right {
+            justify-content: flex-end;
+        }
+
+        /* ==================== SECTIONS ==================== */
+        .section {
+            background: var(--color-white);
+            border: 1px solid #e1e5eb;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm);
+            margin: 0 var(--spacing-sm) var(--spacing-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-fast);
+        }
+
+        .section:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .parallel-sections {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin: 0 var(--spacing-sm) var(--spacing-sm);
+        }
+
+        .parallel-sections .section {
+            flex: 1;
+            margin: 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .section-bottom-spacing {
+            margin-top: var(--spacing-sm);
+        }
+
+        .section2-anchor {
+            width: fit-content;
+            padding: var(--spacing-sm) var(--spacing-sm);
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-lg);
+            color: var(--color-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section3-anchor {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        /* ==================== GRID LAYOUTS ==================== */
+        .grid-1x4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        .grid-3x3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        .grid-3x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        /* ==================== FORM ELEMENTS ==================== */
+        .form-group {
+            width: 100%;
+        }
+
+        .form-row {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: flex-end;
+            margin-right: var(--spacing-sm);
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-row .form-group:first-child {
+            flex: 0 0 60%;
+        }
+
+        .form-row .form-group:last-child {
+            flex: 0 0 40%;
+        }
+
+        /* Form Input Base Styles */
+        .form-input,
+        .form-date,
+        .form-dropdown,
+        .form-readonly {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-md);
+            color: var(--color-black);
+            background: var(--color-white);
+            transition: var(--transition-fast);
+            height: 45px;
+            box-sizing: border-box;
+        }
+
+        .form-input,
+        .form-date,
+        .form-dropdown {
+            border: 2px solid #e9ecef;
+        }
+
+        .form-input:focus,
+        .form-date:focus,
+        .form-dropdown:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+        }
+
+        .form-readonly {
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            font-size: var(--font-size-md);
+            display: flex;
+            align-items: center;
+            color: var(--color-black);
+        }
+
+        .form-dropdown {
+            font-size: var(--font-size-md);
+            appearance: none;
+            background: white url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23495057' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        /* Placeholder styling */
+        .form-input::placeholder,
+        .form-date::placeholder,
+        .form-dropdown::placeholder {
+            color: var(--color-black);
+            opacity: 0.7;
+        }
+
+        /* Date pair layout */
+        .form-date-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+        }
+
+        /* ==================== CHECKBOXES ==================== */
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            height: 45px;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #adb5bd;
+            border-radius: var(--radius-round);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            appearance: none;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .form-checkbox input[type="checkbox"]:checked {
+            background-color: #4dabf7;
+            border-color: #4dabf7;
+        }
+
+        .form-checkbox input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--color-white);
+            font-size: var(--font-size-md);
+        }
+
+        .form-checkbox-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        /* ==================== NOTIFICATIONS ==================== */
+        .notification-container {
+            position: fixed;
+            bottom: var(--spacing-md);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            width: 30%;
+            pointer-events: none;
+        }
+
+        .notification {
+            pointer-events: auto;
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition-normal);
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            color: var(--color-white);
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification.hiding {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .notification-icon {
+            flex-shrink: 0;
+            width: 45px;
+            height: 45px;
+        }
+
+        .notification.information {
+            background-color: var(--color-blue);
+        }
+
+        .notification.success {
+            background-color: var(--color-green);
+        }
+
+        .notification.warning {
+            background-color: var(--color-yellow);
+        }
+
+        .notification.error {
+            background-color: var(--color-red);
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            width: 20%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 2px solid var(--color-border);
+        }
+
+        .modal-button {
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            height: 60px;
+            width: 240px;
+            color: var(--color-white);
+        }
+
+        .modal-cancel {
+            background-color: var(--color-red);
+        }
+
+        .modal-cancel:hover {
+            background-color: var(--color-red-hover);
+            transform: translateY(-1px);
+        }
+
+        .modal-confirm {
+            background-color: var(--color-green);
+        }
+
+        .modal-confirm:hover {
+            background-color: var(--color-green-hover);
+            transform: translateY(-1px);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(30, 30);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toolbar and HTML structure remains exactly the same as your original -->
+    <!-- ... (keeping all your existing HTML) ... -->
+
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <button class="btn btn-refresh" id="refreshBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                    <path d="M16 16h5v5"></path>
+                </svg>
+                Reîncarcă
+            </button>
+            <button class="btn btn-save" id="saveBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Salvează
+            </button>
+            <button class="btn btn-search" id="searchBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Caută
+            </button>
+        </div>
+
+        <div class="toolbar-center">
+            <div class="page-nav">
+                <button class="page-btn" id="prevBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <div class="page-info"><span id="currentPage">0</span> / <span id="totalPages">0</span></div>
+                <button class="page-btn" id="nextBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-right">
+            <button class="btn btn-export" id="exportBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Exportă
+            </button>
+            <button class="btn btn-report" id="reportBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Raportează
+            </button>
+            <button class="btn btn-delete" id="deleteBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                Șterge
+            </button>
+        </div>
+    </div>
+
+    <!-- All your modal and section HTML remains exactly the same -->
+    <!-- ... (keeping all your existing modal and section HTML) ... -->
+
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Caută pacient</div>
+            <div class="form-group">
+                <input type="text" id="searchInput" class="form-input"
+                    placeholder="Nume complet / parțial, nu ține cont de majuscule">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" onclick="closeModal('searchModal')">Anulează</button>
+                <button class="modal-button modal-confirm" onclick="performSearch()">Confirmă</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Exportă pacienți</div>
+            <div class="form-group">
+                <div class="form-label">Data început</div>
+                <input type="datetime-local" id="exportStartDate" class="form-date">
+            </div>
+            <div class="section-bottom-spacing"></div>
+            <div class="form-group">
+                <div class="form-label">Data sfârșit</div>
+                <input type="datetime-local" id="exportEndDate" class="form-date">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" onclick="closeModal('exportModal')">Anulează</button>
+                <button class="modal-button modal-confirm" onclick="performExport()">Confirmă</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Raportează pacienți</div>
+            <div class="form-group">
+                <div class="form-label">Data început</div>
+                <input type="datetime-local" id="reportStartDate" class="form-date">
+            </div>
+            <div class="section-bottom-spacing"></div>
+            <div class="form-group">
+                <div class="form-label">Data sfârșit</div>
+                <input type="datetime-local" id="reportEndDate" class="form-date">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" onclick="closeModal('reportModal')">Anulează</button>
+                <button class="modal-button modal-confirm" onclick="performReport()">Confirmă</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Șterge pacienți</div>
+            <div class="form-group">
+                <input type="password" id="deleteInput" class="form-input"
+                    placeholder="Introduceți parola pentru confirmare">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" onclick="closeModal('deleteModal')">Anulează</button>
+                <button class="modal-button modal-confirm" onclick="performDelete()">Confirmă</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Informații Pacient</div>
+        </div>
+        <div class="grid-1x4">
+            <div class="form-group">
+                <div class="form-label">ID / Data și ora vizitei</div>
+                <div id="display-id-timestamp" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Nume / Vârsta / Sexul</div>
+                <div id="display-name-age-gender" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Adresă domiciliu</div>
+                <div id="display-address" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Facultate / An / Limbă</div>
+                <div id="display-faculty-year-language" class="form-readonly"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Istoric Medical</div>
+            <div class="section2-anchor" id="display-lmp" style="display:none">DUM: DD/MM/YYYY</div>
+        </div>
+        <div class="grid-1x4">
+            <div class="form-group">
+                <div class="form-label">Simptome / Motiv vizită</div>
+                <div id="display-symptoms-reason" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Tratament curent</div>
+                <div id="display-current-treatment" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Boli cronice</div>
+                <div id="display-chronic-diseases" class="form-readonly"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">Alergii</div>
+                <div id="display-allergies" class="form-readonly"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="parallel-sections">
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Diagnostic Medical</div>
+                <div class="section3-anchor">
+                    <span class="section3-label">Vaccin</span>
+                    <input type="text" id="display-vaccine" class="form-input" placeholder="Introduceți vaccinul">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Diagnostic</label>
+                    <input type="text" id="display-diagnosis" class="form-input" placeholder="Introduceți diagnosticul">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Coduri de boală</label>
+                    <input type="text" id="display-disease-codes" class="form-input" oninput="forceDC(this)"
+                        placeholder="Introduceți codurile de boală">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Rețetă Medicală</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Rețetă Integrală</label>
+                    <input type="text" id="display-certificate-integral" class="form-input"
+                        placeholder="Introduceți datele...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rețetă Gratuită</label>
+                    <input type="text" id="display-certificate-free" class="form-input" oninput="forceRP(this)"
+                        maxlength="12" placeholder="EX: ABCDEF 12345">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="parallel-sections">
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Bilet Trimitere</div>
+            </div>
+            <div class="grid-3x3">
+                <div class="form-group">
+                    <label class="form-label">BT CAS 1</label>
+                    <input type="text" id="display-btcas1-code" class="form-input" oninput="forceBT(this)"
+                        maxlength="13" placeholder="EX: ABCDE 1234567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specialitate</label>
+                    <select id="display-btcas1-specialty" class="form-dropdown">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tip</label>
+                    <select id="display-btcas1-type" class="form-dropdown">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">BT CAS 2</label>
+                    <input type="text" id="display-btcas2-code" class="form-input" oninput="forceBT(this)"
+                        maxlength="13" placeholder="EX: ABCDE 1234567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specialitate</label>
+                    <select id="display-btcas2-specialty" class="form-dropdown">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tip</label>
+                    <select id="display-btcas2-type" class="form-dropdown">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">BT CAS 3</label>
+                    <input type="text" id="display-btcas3-code" class="form-input" oninput="forceBT(this)"
+                        maxlength="13" placeholder="EX: ABCDE 1234567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specialitate</label>
+                    <select id="display-btcas3-specialty" class="form-dropdown">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tip</label>
+                    <select id="display-btcas3-type" class="form-dropdown">
+                    </select>
+                </div>
+            </div>
+            <div class="section-bottom-spacing"></div>
+            <div class="form-group">
+                <label class="form-label">Bilet simplu</label>
+                <input type="text" id="display-bt-simple" class="form-input" placeholder="Introduceți datele...">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Adeverință Medicală</div>
+            </div>
+            <div class="grid-3x2">
+                <div class="form-group">
+                    <label class="form-label">Scutire Absență</label>
+                    <div class="form-date-pair">
+                        <input type="date" id="display-absence-leave-start" class="form-date">
+                        <input type="date" id="display-absence-leave-end" class="form-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Scutire Sport</label>
+                    <div class="form-date-pair">
+                        <input type="date" id="display-sport-leave-start" class="form-date">
+                        <input type="date" id="display-sport-leave-end" class="form-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vizare Scutire Absență 1</label>
+                    <div class="form-date-pair">
+                        <input type="date" id="display-absence1-exemption-start" class="form-date">
+                        <input type="date" id="display-absence1-exemption-end" class="form-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vizare Scutire Sport</label>
+                    <div class="form-date-pair">
+                        <input type="date" id="display-sport-exemption-start" class="form-date">
+                        <input type="date" id="display-sport-exemption-end" class="form-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vizare Scutire Absență 2</label>
+                    <div class="form-date-pair">
+                        <input type="date" id="display-absence2-exemption-start" class="form-date">
+                        <input type="date" id="display-absence2-exemption-end" class="form-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label" style="visibility: hidden;">Checkboxes</div>
+                    <div class="form-checkbox-pair">
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="display-medical-scholarship">
+                            <label for="display-medical-scholarship" class="form-checkbox-label">Bursă medicală</label>
+                        </div>
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="display-epidemiological">
+                            <label for="display-epidemiological" class="form-checkbox-label">Aviz epidemiologic</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-bottom-spacing"></div>
+            <div class="form-group">
+                <label class="form-label">Alt scop</label>
+                <input type="text" id="display-other-purpose" class="form-input" placeholder="Introduceți datele...">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Examen Bilanț</div>
+        </div>
+        <div class="grid-1x4">
+            <div class="form-group">
+                <label class="form-label">Înălțime (cm)</label>
+                <input type="text" id="display-height" class="form-input" placeholder="Introduceți înălțimea">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Greutate (kg)</label>
+                <input type="text" id="display-weight" class="form-input" placeholder="Introduceți greutatea">
+            </div>
+            <div class="form-group">
+                <label class="form-label">IMC (bmi)</label>
+                <input type="text" id="display-bmi" class="form-input" placeholder="Calculat automat" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Coduri de boală</label>
+                <input type="text" id="display-exam-disease-codes" class="form-input" oninput="forceDC(this)"
+                    placeholder="Introduceți codurile de boală">
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-container"></div>
+
+    <script>
+        // ==================== APP STATE ====================
+        const appState = {
+            patients: [],
+            currentPage: 0,
+            totalPages: 0,
+            isLoading: false,
+            hasUnsavedChanges: false
+        };
+
+        // ==================== CONSTANTS ====================
+        const specialtiesOptions = [
+            'Alergologie', 'Boli infecțioase', 'Cardiologie', 'Chirurgie BMF', 'Chirurgie cardio',
+            'Chirurgie generală', 'Chirurgie plastică', 'Chirurgie toracică', 'Chirurgie vasculară',
+            'Dermato-venerologie', 'Diabet și boli metabolice', 'Endocrinologie', 'Gastroenterologie',
+            'Genetică medicală', 'Hematologie', 'Medicină internă', 'Nefrologie', 'Neurochirurgie',
+            'Neurologie', 'Obstetrică-ginecologie', 'Oftalmologie', 'Oncologie', 'Ortopedie', 'ORL',
+            'Pediatrie', 'Pneumologie', 'Psihiatrie', 'Radiologie', 'Radioterapie',
+            'Reabilitare medicală fizică', 'Reumatologie', 'Urologie'
+        ];
+
+        const typeOptions = ['Acut', 'Cronic'];
+
+        const notificationIcons = {
+            success: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>',
+            error: '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>',
+            warning: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>',
+            information: '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>'
+        };
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeDropdowns();
+            initializeModalDates();
+            setupEventListeners();
+            trackUnsavedChanges();
+            performRefresh();
+        });
+
+        // ==================== UI INITIALIZATION FUNCTIONS ====================
+        function initializeDropdowns() {
+            for (let i = 1; i <= 3; i++) {
+                const specialtyId = `display-btcas${i}-specialty`;
+                const typeId = `display-btcas${i}-type`;
+
+                initializeSelectWithOptions(specialtyId, specialtiesOptions, 'Selectați specialitatea');
+                initializeSelectWithOptions(typeId, typeOptions, 'Selectați tipul');
+            }
+        }
+
+        function initializeSelectWithOptions(selectId, options, placeholderText) {
+            const selectElement = document.getElementById(selectId);
+            if (!selectElement) return;
+
+            selectElement.innerHTML = '';
+
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = '';
+            placeholderOption.textContent = placeholderText;
+            placeholderOption.selected = true;
+            selectElement.appendChild(placeholderOption);
+
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                selectElement.appendChild(optionElement);
+            });
+        }
+
+        function initializeModalDates() {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+            document.getElementById('exportStartDate').value = formatDateTimeLocal(now);
+            document.getElementById('exportEndDate').value = formatDateTimeLocal(now, true);
+            document.getElementById('reportStartDate').value = formatDateTimeLocal(firstDay);
+            document.getElementById('reportEndDate').value = formatDateTimeLocal(lastDay, true);
+        }
+
+        function formatDateTimeLocal(date, isEndOfDay = false) {
+            const d = new Date(date);
+            if (isEndOfDay) {
+                d.setHours(23, 59, 59);
+            } else {
+                d.setHours(0, 0, 0);
+            }
+
+            const pad = n => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        function setupEventListeners() {
+            document.getElementById('refreshBtn').addEventListener('click', performRefresh);
+            document.getElementById('saveBtn').addEventListener('click', performSave);
+            document.getElementById('searchBtn').addEventListener('click', () => openModal('searchModal'));
+            document.getElementById('exportBtn').addEventListener('click', () => openModal('exportModal'));
+            document.getElementById('reportBtn').addEventListener('click', () => openModal('reportModal'));
+            document.getElementById('deleteBtn').addEventListener('click', () => openModal('deleteModal'));
+            document.getElementById('prevBtn').addEventListener('click', goToPrevPage);
+            document.getElementById('nextBtn').addEventListener('click', goToNextPage);
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        const activeElement = document.activeElement;
+                        const isDatePickerOpen = activeElement &&
+                            (activeElement.classList.contains('form-date') || activeElement.type === 'date');
+
+                        if (!isDatePickerOpen) {
+                            modal.style.display = 'none';
+                        }
+                    }
+                });
+            });
+
+            setupHeightWeightInputs();
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+
+            window.addEventListener('beforeunload', (e) => {
+                if (appState.hasUnsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = 'Aveți modificări nesalvate. Doriți să părăsiți pagina?';
+                }
+            });
+        }
+
+        function setupHeightWeightInputs() {
+            const heightInput = document.getElementById('display-height');
+            const weightInput = document.getElementById('display-weight');
+            const bmiInput = document.getElementById('display-bmi');
+
+            if (heightInput) {
+                heightInput.addEventListener('input', function (e) {
+                    restrictNumericInput(e.target);
+                    calculateBMI();
+                    appState.hasUnsavedChanges = true;
+                });
+
+                heightInput.addEventListener('keypress', function (e) {
+                    const char = String.fromCharCode(e.which);
+                    if (!/[\d.]/.test(char) && !e.ctrlKey && e.which !== 8 && e.which !== 0) {
+                        e.preventDefault();
+                    }
+                    if (char === '.' && this.value.includes('.')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            if (weightInput) {
+                weightInput.addEventListener('input', function (e) {
+                    restrictNumericInput(e.target);
+                    calculateBMI();
+                    appState.hasUnsavedChanges = true;
+                });
+
+                weightInput.addEventListener('keypress', function (e) {
+                    const char = String.fromCharCode(e.which);
+                    if (!/[\d.]/.test(char) && !e.ctrlKey && e.which !== 8 && e.which !== 0) {
+                        e.preventDefault();
+                    }
+                    if (char === '.' && this.value.includes('.')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            function calculateBMI() {
+                const height = parseFloat(heightInput.value);
+                const weight = parseFloat(weightInput.value);
+
+                if (heightInput.value.trim() && weightInput.value.trim()) {
+                    if (height > 0 && weight > 0) {
+                        const bmi = weight / ((height / 100) ** 2);
+                        bmiInput.value = bmi.toFixed(1);
+                    }
+                } else {
+                    bmiInput.value = '';
+                }
+            }
+        }
+
+        function trackUnsavedChanges() {
+            const editableInputs = document.querySelectorAll('input[type="text"]:not(.form-readonly), select, input[type="date"], input[type="checkbox"]');
+            editableInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    appState.hasUnsavedChanges = true;
+                });
+                input.addEventListener('input', () => {
+                    appState.hasUnsavedChanges = true;
+                });
+            });
+        }
+
+        // ==================== INPUT VALIDATION & FORMATTING ====================
+        function restrictNumericInput(input) {
+            let value = input.value;
+            let cleanedValue = value.replace(/[^\d.]/g, '');
+
+            const parts = cleanedValue.split('.');
+            if (parts.length > 2) {
+                cleanedValue = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            if (cleanedValue.startsWith('0') && cleanedValue.length > 1 && cleanedValue[1] !== '.') {
+                cleanedValue = cleanedValue.replace(/^0+/, '');
+                if (cleanedValue.startsWith('.')) {
+                    cleanedValue = '0' + cleanedValue;
+                }
+            }
+
+            if (cleanedValue === '' || cleanedValue === '.') {
+                cleanedValue = '';
+            }
+
+            if (cleanedValue.includes('.')) {
+                const [whole, decimal] = cleanedValue.split('.');
+                cleanedValue = whole + '.' + decimal.slice(0, 1);
+            }
+
+            if (value !== cleanedValue) {
+                input.value = cleanedValue;
+            }
+        }
+
+        function forceDC(input) {
+            let value = input.value;
+            let cleanedValue = value.replace(/[^\d\s]/g, '');
+            const digitCount = cleanedValue.replace(/\s/g, '').length;
+            if (digitCount > 18) cleanedValue = cleanedValue.slice(0, -(digitCount - 18));
+            input.value = cleanedValue;
+        }
+
+        function forceBT(input) {
+            let value = input.value.toUpperCase();
+            let cleanedValue = value.replace(/[^A-Z0-9]/g, '');
+            let letters = cleanedValue.slice(0, 5).replace(/[^A-Z]/g, '');
+            let digits = cleanedValue.slice(5).replace(/\D/g, '').slice(0, 7);
+            input.value = letters.slice(0, 5) + (digits.length > 0 ? ' ' + digits.slice(0, 7) : '');
+        }
+
+        function forceRP(input) {
+            let value = input.value.toUpperCase();
+            let cleanedValue = value.replace(/[^A-Z0-9]/g, '');
+            let letters = cleanedValue.slice(0, 6).replace(/[^A-Z]/g, '');
+            let digits = cleanedValue.slice(6).replace(/\D/g, '').slice(0, 5);
+            input.value = letters.slice(0, 6) + (digits.length > 0 ? ' ' + digits.slice(0, 5) : '');
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function showNotification(message, type = 'information') {
+            let container = document.querySelector('.notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <svg class="notification-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    ${notificationIcons[type] || notificationIcons.information}
+                </svg>
+                ${message}
+            `;
+
+            container.insertBefore(notification, container.firstChild);
+
+            setTimeout(() => notification.classList.add('show'), 10);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hiding');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+
+            notification.addEventListener('click', () => {
+                notification.classList.remove('show');
+                notification.classList.add('hiding');
+                setTimeout(() => notification.remove(), 300);
+            });
+        }
+
+        // ==================== MODAL FUNCTIONS ====================
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+
+            switch (modalId) {
+                case 'searchModal':
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('searchInput').focus();
+                    break;
+                case 'deleteModal':
+                    document.getElementById('deleteInput').value = '';
+                    document.getElementById('deleteInput').focus();
+                    break;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // ==================== PATIENT DISPLAY ====================
+        function displayCurrentPatient() {
+            if (appState.currentPage < 1 || appState.currentPage > appState.patients.length) return;
+            const patient = appState.patients[appState.currentPage - 1];
+
+            const setContent = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value || '';
+            };
+
+            const setValue = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.value = value || '';
+            };
+
+            const setCheckbox = (id, checked) => {
+                const element = document.getElementById(id);
+                if (element) element.checked = !!checked;
+            };
+
+            const setSelect = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.value = value || '';
+            };
+
+            setContent('display-id-timestamp', `${patient.id} / ${patient.timestamp}`);
+            setContent('display-name-age-gender', `${patient.name} / ${patient.age} / ${patient.gender}`);
+            setContent('display-address', patient.address);
+            setContent('display-faculty-year-language', `${patient.faculty} / ${patient.year} / ${patient.language}`);
+            setContent('display-symptoms-reason', patient.symptoms || '');
+            setContent('display-current-treatment', patient.treatment || '');
+            setContent('display-chronic-diseases', patient.diseases || '');
+            setContent('display-allergies', patient.allergies || '');
+
+            const lmpDisplay = document.getElementById('display-lmp');
+            if (patient.gender === 'F' && patient.lmp) {
+                lmpDisplay.style.display = 'block';
+                lmpDisplay.textContent = `DUM: ${patient.lmp}`;
+            } else {
+                lmpDisplay.style.display = 'none';
+                lmpDisplay.textContent = '';
+            }
+
+            setValue('display-vaccine', patient.vaccin || '');
+            setValue('display-diagnosis', patient.diagnostic || '');
+            setValue('display-disease-codes', patient.coduriBoala || '');
+            setValue('display-certificate-integral', patient.rpIntegrala || '');
+            setValue('display-certificate-free', patient.rpGratuita || '');
+
+            setValue('display-btcas1-code', patient.btCas1Cod || '');
+            setSelect('display-btcas1-specialty', patient.btCas1Specialitate || '');
+            setSelect('display-btcas1-type', patient.btCas1Tip || '');
+
+            setValue('display-btcas2-code', patient.btCas2Cod || '');
+            setSelect('display-btcas2-specialty', patient.btCas2Specialitate || '');
+            setSelect('display-btcas2-type', patient.btCas2Tip || '');
+
+            setValue('display-btcas3-code', patient.btCas3Cod || '');
+            setSelect('display-btcas3-specialty', patient.btCas3Specialitate || '');
+            setSelect('display-btcas3-type', patient.btCas3Tip || '');
+
+            setValue('display-bt-simple', patient.btSimplu || '');
+
+            setValue('display-absence-leave-start', patient.amSAbsentaStart || '');
+            setValue('display-absence-leave-end', patient.amSAbsentaEnd || '');
+            setValue('display-sport-leave-start', patient.amSSportStart || '');
+            setValue('display-sport-leave-end', patient.amSSportEnd || '');
+            setValue('display-absence1-exemption-start', patient.amVAbsenta1Start || '');
+            setValue('display-absence1-exemption-end', patient.amVAbsenta1End || '');
+            setValue('display-sport-exemption-start', patient.amVSportStart || '');
+            setValue('display-sport-exemption-end', patient.amVSportEnd || '');
+            setValue('display-absence2-exemption-start', patient.amVAbsenta2Start || '');
+            setValue('display-absence2-exemption-end', patient.amVAbsenta2End || '');
+            setCheckbox('display-medical-scholarship', patient.amBursaMedicala || false);
+            setCheckbox('display-epidemiological', patient.aeAvizEpidemiologic || false);
+            setValue('display-other-purpose', patient.amAltScop || '');
+
+            setValue('display-height', patient.ebInaltime || '');
+            setValue('display-weight', patient.ebGreutate || '');
+            setValue('display-bmi', patient.ebIMC || '');
+            setValue('display-exam-disease-codes', patient.ebCoduriBoala || '');
+
+            appState.hasUnsavedChanges = false;
+        }
+
+        function clearAllFields() {
+            const readonlyElements = document.querySelectorAll('.form-readonly');
+            readonlyElements.forEach(el => el.textContent = '');
+
+            const inputElements = document.querySelectorAll('input[type="text"], input[type="date"]');
+            inputElements.forEach(el => el.value = '');
+
+            const selectElements = document.querySelectorAll('select');
+            selectElements.forEach(el => el.value = '');
+
+            const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+            checkboxElements.forEach(el => el.checked = false);
+
+            document.getElementById('display-lmp').style.display = 'none';
+
+            appState.currentPage = 0;
+            updatePaginationControls();
+            appState.hasUnsavedChanges = false;
+        }
+
+        // ==================== PAGINATION ====================
+        function updatePaginationControls() {
+            const totalPatients = appState.patients.length;
+            document.getElementById('currentPage').textContent = appState.currentPage;
+            document.getElementById('totalPages').textContent = totalPatients;
+
+            document.getElementById('prevBtn').disabled = appState.currentPage <= 1 || appState.isLoading;
+            document.getElementById('nextBtn').disabled = appState.currentPage >= totalPatients || appState.isLoading;
+        }
+
+        function goToPrevPage() {
+            if (appState.currentPage > 1 && !appState.isLoading) {
+                if (appState.hasUnsavedChanges) {
+                    if (!confirm('Aveți modificări nesalvate. Doriți să continuați fără a salva?')) {
+                        return;
+                    }
+                    appState.hasUnsavedChanges = false;
+                }
+                appState.currentPage--;
+                displayCurrentPatient();
+                updatePaginationControls();
+            }
+        }
+
+        function goToNextPage() {
+            if (appState.currentPage < appState.patients.length && !appState.isLoading) {
+                if (appState.hasUnsavedChanges) {
+                    if (!confirm('Aveți modificări nesalvate. Doriți să continuați fără a salva?')) {
+                        return;
+                    }
+                    appState.hasUnsavedChanges = false;
+                }
+                appState.currentPage++;
+                displayCurrentPatient();
+                updatePaginationControls();
+            }
+        }
+
+        // ==================== VALIDATION ====================
+        function validateDatePair(startId, endId, fieldName, errors) {
+            const start = document.getElementById(startId).value;
+            const end = document.getElementById(endId).value;
+
+            if (start || end) {
+                if (!start) {
+                    errors.push(`${fieldName} data de început este obligatorie\n`);
+                }
+                if (!end) {
+                    errors.push(`${fieldName} data de sfârșit este obligatorie\n`);
+                }
+                if (start && end && new Date(start) > new Date(end)) {
+                    errors.push(`${fieldName} data de început nu poate fi după data de sfârșit\n`);
+                }
+            }
+        }
+
+        function validateBTCAS(sectionNum, errors) {
+            const code = document.getElementById(`display-btcas${sectionNum}-code`).value.trim();
+            const specialty = document.getElementById(`display-btcas${sectionNum}-specialty`).value;
+            const type = document.getElementById(`display-btcas${sectionNum}-type`).value;
+
+            if (code || specialty || type) {
+                if (!code) errors.push(`BT CAS ${sectionNum} seria și numărul este obligatorie\n`);
+                if (!specialty) errors.push(`BT CAS ${sectionNum} specialitatea este obligatorie\n`);
+                if (!type) errors.push(`BT CAS ${sectionNum} tipul este obligatoriu\n`);
+            }
+        }
+
+        function validateAllFields() {
+            const errors = [];
+
+            const height = document.getElementById('display-height').value.trim();
+            const weight = document.getElementById('display-weight').value.trim();
+            const diseaseCodes = document.getElementById('display-exam-disease-codes').value.trim();
+
+            if (height || weight || diseaseCodes) {
+                if (!height) errors.push("EB înălțimea este obligatorie\n");
+                if (!weight) errors.push("EB greutatea este obligatorie\n");
+                if (!diseaseCodes) errors.push("EB codurile de boală sunt obligatorii\n");
+
+                const heightNum = parseFloat(height);
+                const weightNum = parseFloat(weight);
+
+                if (height && (heightNum < 125 || heightNum > 250)) {
+                    errors.push("Înălțimea trebuie să fie între 125 și 250 cm\n");
+                }
+                if (weight && (weightNum < 30 || weightNum > 210)) {
+                    errors.push("Greutatea trebuie să fie între 30 și 210 kg\n");
+                }
+            }
+
+            validateDatePair('display-absence-leave-start', 'display-absence-leave-end', 'Scutire Absență', errors);
+            validateDatePair('display-sport-leave-start', 'display-sport-leave-end', 'Scutire Sport', errors);
+            validateDatePair('display-absence1-exemption-start', 'display-absence1-exemption-end', 'Vizare Scutire Absență 1', errors);
+            validateDatePair('display-sport-exemption-start', 'display-sport-exemption-end', 'Vizare Scutire Sport', errors);
+            validateDatePair('display-absence2-exemption-start', 'display-absence2-exemption-end', 'Vizare Scutire Absență 2', errors);
+
+            validateBTCAS(1, errors);
+            validateBTCAS(2, errors);
+            validateBTCAS(3, errors);
+
+            if (errors.length > 0) {
+                showNotification(errors.join('<br>'), 'warning');
+                return false;
+            }
+
+            return true;
+        }
+
+        // ==================== API CALLS ====================
+        function performRefresh() {
+            if (appState.hasUnsavedChanges) {
+                if (!confirm('Aveți modificări nesalvate. Doriți să continuați fără a salva?')) {
+                    return;
+                }
+                appState.hasUnsavedChanges = false;
+            }
+
+            appState.isLoading = true;
+            showNotification("Se încarcă pacienții de astăzi...", 'information');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+
+                    if (response.success) {
+                        appState.patients = response.data;
+                        appState.currentPage = response.data.length > 0 ? 1 : 0;
+                        updatePaginationControls();
+
+                        if (response.data.length === 0) {
+                            showNotification(response.message, 'information');
+                            clearAllFields();
+                        } else {
+                            displayCurrentPatient();
+                            showNotification(response.message, 'success');
+                        }
+                    } else {
+                        showNotification(response.message, 'error');
+                        clearAllFields();
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare încărcare: ${error.message}`, 'error');
+                    clearAllFields();
+                })
+                .loadPatientData();
+        }
+
+        function performSave() {
+            if (!validateAllFields()) {
+                return;
+            }
+
+            if (appState.currentPage < 1 || appState.currentPage > appState.patients.length) {
+                showNotification("Nu există pacient selectat", 'error');
+                return;
+            }
+
+            const patient = appState.patients[appState.currentPage - 1];
+
+            const updatedData = {
+                id: patient.id,
+                vaccin: document.getElementById('display-vaccine').value,
+                diagnostic: document.getElementById('display-diagnosis').value,
+                coduriBoala: document.getElementById('display-disease-codes').value,
+                rpIntegrala: document.getElementById('display-certificate-integral').value,
+                rpGratuita: document.getElementById('display-certificate-free').value,
+                btCas1Cod: document.getElementById('display-btcas1-code').value,
+                btCas1Specialitate: document.getElementById('display-btcas1-specialty').value,
+                btCas1Tip: document.getElementById('display-btcas1-type').value,
+                btCas2Cod: document.getElementById('display-btcas2-code').value,
+                btCas2Specialitate: document.getElementById('display-btcas2-specialty').value,
+                btCas2Tip: document.getElementById('display-btcas2-type').value,
+                btCas3Cod: document.getElementById('display-btcas3-code').value,
+                btCas3Specialitate: document.getElementById('display-btcas3-specialty').value,
+                btCas3Tip: document.getElementById('display-btcas3-type').value,
+                btSimplu: document.getElementById('display-bt-simple').value,
+                amSAbsentaStart: document.getElementById('display-absence-leave-start').value,
+                amSAbsentaEnd: document.getElementById('display-absence-leave-end').value,
+                amVAbsenta1Start: document.getElementById('display-absence1-exemption-start').value,
+                amVAbsenta1End: document.getElementById('display-absence1-exemption-end').value,
+                amVAbsenta2Start: document.getElementById('display-absence2-exemption-start').value,
+                amVAbsenta2End: document.getElementById('display-absence2-exemption-end').value,
+                amSSportStart: document.getElementById('display-sport-leave-start').value,
+                amSSportEnd: document.getElementById('display-sport-leave-end').value,
+                amVSportStart: document.getElementById('display-sport-exemption-start').value,
+                amVSportEnd: document.getElementById('display-sport-exemption-end').value,
+                amAltScop: document.getElementById('display-other-purpose').value,
+                amBursaMedicala: document.getElementById('display-medical-scholarship').checked,
+                aeAvizEpidemiologic: document.getElementById('display-epidemiological').checked,
+                ebInaltime: document.getElementById('display-height').value,
+                ebGreutate: document.getElementById('display-weight').value,
+                ebIMC: document.getElementById('display-bmi').value,
+                ebCoduriBoala: document.getElementById('display-exam-disease-codes').value
+            };
+
+            appState.isLoading = true;
+            showNotification("Se salvează datele...", 'information');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+                    if (response.success) {
+                        appState.hasUnsavedChanges = false;
+                        showNotification(response.message, 'success');
+                        setTimeout(() => {
+                            performRefresh();
+                        }, 1000);
+                    } else {
+                        showNotification(response.message, 'error');
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare salvare: ${error.message}`, 'error');
+                })
+                .savePatientData(updatedData);
+        }
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if (!searchTerm) {
+                showNotification("Introduceți nume pacient", 'warning');
+                return;
+            }
+
+            appState.isLoading = true;
+            showNotification("Se caută...", 'information');
+            closeModal('searchModal');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+
+                    if (response.success) {
+                        appState.patients = response.data || [];
+                        appState.currentPage = response.data.length > 0 ? 1 : 0;
+                        updatePaginationControls();
+
+                        if (response.data.length === 0) {
+                            showNotification(response.message, 'information');
+                            clearAllFields();
+                        } else {
+                            displayCurrentPatient();
+                            showNotification(response.message, 'success');
+                        }
+                    } else {
+                        showNotification(response.message, 'error');
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare căutare: ${error.message}`, 'error');
+                })
+                .searchPatientData(searchTerm);
+        }
+
+        function performExport() {
+            const startDate = document.getElementById('exportStartDate').value;
+            const endDate = document.getElementById('exportEndDate').value;
+
+            if (!startDate || !endDate) {
+                showNotification("Selectați ambele date", 'warning');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showNotification("Data de început nu poate fi după data de sfârșit", 'warning');
+                return;
+            }
+
+            appState.isLoading = true;
+            showNotification("Se generează exportul...", 'information');
+            closeModal('exportModal');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                    } else {
+                        showNotification(response.message, 'error');
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare export: ${error.message}`, 'error');
+                })
+                .exportPatientData(startDate, endDate);
+        }
+
+        function performReport() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+
+            if (!startDate || !endDate) {
+                showNotification("Selectați ambele date", 'warning');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showNotification("Data de început nu poate fi după data de sfârșit", 'warning');
+                return;
+            }
+
+            appState.isLoading = true;
+            showNotification("Se generează raportul...", 'information');
+            closeModal('reportModal');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                    } else {
+                        showNotification(response.message, 'error');
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare raport: ${error.message}`, 'error');
+                })
+                .reportPatientData(startDate, endDate);
+        }
+
+        function performDelete() {
+            const password = document.getElementById('deleteInput').value;
+
+            if (!password) {
+                showNotification("Introduceți parola", 'warning');
+                return;
+            }
+
+            appState.isLoading = true;
+            showNotification("Se șterg datele...", 'information');
+            closeModal('deleteModal');
+
+            google.script.run
+                .withSuccessHandler((response) => {
+                    appState.isLoading = false;
+                    if (response.success) {
+                        appState.patients = [];
+                        appState.currentPage = 0;
+                        clearAllFields();
+                        updatePaginationControls();
+                        showNotification(response.message, 'success');
+                    } else {
+                        showNotification(response.message, 'error');
+                    }
+                })
+                .withFailureHandler((error) => {
+                    appState.isLoading = false;
+                    showNotification(`Eroare ștergere: ${error.message}`, 'error');
+                })
+                .deletePatientData(password);
+        }
+
+        // ==================== KEYBOARD SHORTCUTS ====================
+        function handleKeyboardShortcuts(e) {
+            if ((e.ctrlKey && e.key === 'r') || e.key === 'F5') {
+                e.preventDefault();
+                performRefresh();
+            }
+
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                performSave();
+            }
+
+            if (e.ctrlKey || e.altKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToPrevPage();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    goToNextPage();
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
