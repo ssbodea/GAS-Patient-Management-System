@@ -79,3 +79,14 @@ The backend was carefully optimized for **speed, accuracy, and usability**, focu
 - Conditional checks skip unnecessary computations for empty or invalid rows.
 
 ---
+
+## 🔗 Live Demo & Links
+
+- **Live Web App:** [UMF Patient Management System](https://script.google.com/macros/s/AKfycbzrHNsvOp8TcDMPFfcob9Lm1L3IJZhGh_dtkD2fZ3kEbAxeaQJKXGTD3sGrzz9Od0cC2A/exec)  
+  *Complete a form submission → refresh the website → select the entry → modify as needed.*
+
+- **Google Form (Submit Patient Data):** [Complete Form](https://docs.google.com/forms/d/e/1FAIpQLSfdEi4e1BP_0zEhgKo1ulAoC-3FwwqycK3i7XX4d-S5RGN-pA/viewform?usp=dialog)
+
+- **Google Sheet (Database View):** [View Spreadsheet](https://docs.google.com/spreadsheets/d/1YWRWOdLFiKcTzxGli42Pp0ldwR8ZQs5vY56GLC3POz8/edit?usp=sharing)
+
+---
