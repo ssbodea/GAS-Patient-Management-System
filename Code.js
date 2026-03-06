@@ -2,9 +2,10 @@ const CONFIG = {
     SHEET_NAME: "Form Responses 1",
     ID: 0, TIMESTAMP: 1, NAME: 2, AGE: 3, GENDER: 4, LMP: 5, ADDRESS: 6, FACULTY: 7, YEAR: 8, LANGUAGE: 9, SYMPTOMS: 10, TREATMENT: 11, DISEASES: 12, ALLERGIES: 13,
     VACCIN: 14, DIAGNOSTIC: 15, CODURI_BOALA: 16, RP_INTEGRALA: 17, RP_GRATUITA: 18, BT_CAS_1: 19, BT_CAS_2: 20, BT_CAS_3: 21, BT_SIMPLU: 22,
-    AM_S_ABSENTA: 23, AM_V_ABSENTA_1: 24, AM_V_ABSENTA_2: 25, AM_S_SPORT: 26, AM_V_SPORT: 27, AM_ALT_SCOP: 28, AM_BURSA_MEDICALA: 29, AE_AVIZ_EPIDEMIOLOGIC: 30, EB_INALTIME: 31, EB_GREUTATE: 32, EB_IMC: 33, EB_CODURI_BOALA: 34,
+    AM_S_ABSENTA: 23, AM_V_ABSENTA_1: 24, AM_V_ABSENTA_2: 25, AM_S_SPORT: 26, AM_V_SPORT: 27, AM_ALT_SCOP: 28, AM_BURSA_MEDICALA: 29, AE_AVIZ_EPIDEMIOLOGIC: 30,
+    EB_INALTIME: 31, EB_GREUTATE: 32, EB_IMC: 33, EB_CODURI_BOALA: 34,
     COLUMN_COUNT: 35,
-    ALLOWED_EMAILS: ["your-gmail-address@gmail.com"],
+    ALLOWED_EMAILS: ["ss.bodea@gmail.com", "agent07.marius@gmail.com", "qmaedica@gmail.com"],
 };
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -12,7 +13,7 @@ const CONFIG = {
 function checkUserAuthorization() {
     const userEmail = Session.getActiveUser().getEmail();
     if (!CONFIG.ALLOWED_EMAILS.includes(userEmail)) {
-        throw new Error("Acces neautorizat. Email: " + userEmail);
+        throw new Error(`Acces neautorizat. Email: ${userEmail}`);
     }
 }
 
@@ -83,7 +84,7 @@ function parseDateRangeForDisplay(rangeStr) {
 
 // ==================== BINARY SEARCH FUNCTIONS ====================
 
-function findFirstRowByDateTime(targetDateTime) {
+function findRowByDateTime(targetDateTime, findFirst = true) {
     const sheet = getSheet();
     const lastRow = sheet.getLastRow();
     if (lastRow <= 1) return -1;
@@ -106,45 +107,20 @@ function findFirstRowByDateTime(targetDateTime) {
 
         const midTime = midDate.getTime();
 
-        if (midTime >= targetTime) {
-            result = mid;
-            right = mid - 1;
+        if (findFirst) {
+            if (midTime >= targetTime) {
+                result = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
         } else {
-            left = mid + 1;
-        }
-    }
-
-    return result !== -1 ? result + 2 : -1;
-}
-
-function findLastRowByDateTime(targetDateTime) {
-    const sheet = getSheet();
-    const lastRow = sheet.getLastRow();
-    if (lastRow <= 1) return -1;
-
-    const timestamps = sheet.getRange(2, CONFIG.TIMESTAMP + 1, lastRow - 1, 1).getValues();
-    const targetTime = new Date(targetDateTime).getTime();
-
-    let left = 0;
-    let right = timestamps.length - 1;
-    let result = -1;
-
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        const midDate = timestamps[mid][0];
-
-        if (!(midDate instanceof Date)) {
-            left = mid + 1;
-            continue;
-        }
-
-        const midTime = midDate.getTime();
-
-        if (midTime <= targetTime) {
-            result = mid;
-            left = mid + 1;
-        } else {
-            right = mid - 1;
+            if (midTime <= targetTime) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
         }
     }
 
@@ -266,7 +242,7 @@ function doGet() {
 
 function loadPatientData() {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
         if (lastRow <= 1) {
@@ -301,7 +277,7 @@ function loadPatientData() {
                     data: patients,
                     message: patients.length === 0
                         ? "Nu există pacienți înregistrați astăzi"
-                        : `${patients.length} pacient${patients.length === 1 ? '' : 'i'} încărcați cu succes`
+                        : `${patients.length} pacien${patients.length === 1 ? 't' : 'ți'} încărca${patients.length === 1 ? 't' : 'ți'} cu succes`
                 };
             }
         }
@@ -311,7 +287,7 @@ function loadPatientData() {
             data: patients,
             message: patients.length === 0
                 ? "Nu există pacienți înregistrați astăzi"
-                : `${patients.length} pacient${patients.length === 1 ? '' : 'i'} încărcați cu succes`
+                : `${patients.length} pacien${patients.length === 1 ? 't' : 'ți'} încărca${patients.length === 1 ? 't' : 'ți'} cu succes`
         };
 
     } catch (error) {
@@ -325,7 +301,7 @@ function loadPatientData() {
 
 function savePatientData(patientData) {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
 
@@ -349,6 +325,15 @@ function savePatientData(patientData) {
             return {
                 success: false,
                 message: `Pacientul cu ID-ul ${patientData.id} nu a fost găsit`
+            };
+        }
+
+        const actualId = sheet.getRange(rowNum, CONFIG.ID + 1).getValue();
+
+        if (parseInt(actualId, 10) !== patientId) {
+            return {
+                success: false,
+                message: `Eroare de integritate date: Rândul ${rowNum} nu corespunde cu ID-ul ${patientId}`
             };
         }
 
@@ -395,7 +380,7 @@ function savePatientData(patientData) {
 
 function searchPatientData(searchTerm) {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
 
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
@@ -468,10 +453,10 @@ function searchPatientData(searchTerm) {
 
 function exportPatientData(startDate, endDate) {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
 
-        const firstRow = findFirstRowByDateTime(startDate);
-        const lastRow = findLastRowByDateTime(endDate);
+        const firstRow = findRowByDateTime(startDate, true);
+        const lastRow = findRowByDateTime(endDate, false);
 
         if (firstRow === -1 || lastRow === -1) {
             return {
@@ -539,8 +524,8 @@ function exportPatientData(startDate, endDate) {
 
         const headers = [
             'Nr. crt.', 'Ziua', 'Numele și prenumele', 'Vârsta', 'Sexul',
-            'Domiciliul', 'Ocupație', 'Simptome', 'Diagnostic', 'Cod',
-            'Prescripții med., analize, adev. med., trat. etc.'
+            'Domiciliul, județ, localitate, str., nr.', 'Ocupație', 'Simptome', 'Diagnostic', 'Cod',
+            'Prescripții medicamente, analize, concediu medical, tratament, etc.'
         ];
 
         const output = [headers, ...rows];
@@ -556,8 +541,7 @@ function exportPatientData(startDate, endDate) {
             .setFontWeight("bold")
             .setHorizontalAlignment("center");
 
-        //const columnWidths = [55, 113, 151, 57, 57, 302, 113, 208, 454, 151, 454];
-        const columnWidths = [37, 86, 127, 20, 18, 127, 70, 127, 127, 36, 294];
+        const columnWidths = [37, 80, 127, 20, 18, 127, 76, 127, 127, 36, 294];
         for (let col = 0; col < headers.length; col++) {
             sheet.setColumnWidth(col + 1, columnWidths[col]);
         }
@@ -579,13 +563,13 @@ function exportPatientData(startDate, endDate) {
 
 function reportPatientData(startDate, endDate) {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
 
         const startTime = Date.now();
         const userEmail = Session.getActiveUser().getEmail();
 
-        const firstRow = findFirstRowByDateTime(startDate);
-        const lastRow = findLastRowByDateTime(endDate);
+        const firstRow = findRowByDateTime(startDate, true);
+        const lastRow = findRowByDateTime(endDate, false);
 
         if (firstRow === -1 || lastRow === -1) {
             return {
@@ -598,8 +582,8 @@ function reportPatientData(startDate, endDate) {
         const rowCount = lastRow - firstRow + 1;
         const filteredData = sourceSheet.getRange(firstRow, 1, rowCount, CONFIG.COLUMN_COUNT).getValues();
 
-        const CodCounts = new Int32Array(1000);
-        const ebCodCounts = new Int32Array(1000);
+        const CodCounts = new Uint16Array(1000);
+        const ebCodCounts = new Uint16Array(1000);
 
         let vaccin = 0, rpIntegrala = 0, rpGratuita = 0, btCas = 0, btSimplu = 0;
         let amScutireAbsenta = 0, amVizareAbsenta = 0, amScutireSport = 0, amVizareSport = 0;
@@ -799,7 +783,7 @@ function reportPatientData(startDate, endDate) {
 
 function deletePatientData(password) {
     try {
-        //checkUserAuthorization();
+        checkUserAuthorization();
 
         const correctPassword = PropertiesService.getScriptProperties().getProperty('DELETE_PASSWORD');
         if (!correctPassword) {
