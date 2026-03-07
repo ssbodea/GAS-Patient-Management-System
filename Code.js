@@ -197,16 +197,22 @@ function createPatientFromRow(row) {
 // ==================== TRIGGER FUNCTIONS ====================
 
 function onFormSubmit(e) {
-    const sheet = getSheet();
-    const row = e.range.getRow();
-
-    if (row < 2) {
-        sheet.deleteRow(row);
-        return;
-    }
+    const lock = LockService.getScriptLock();
+    let sheet, row;
 
     try {
+        lock.waitLock(10000);
+
+        sheet = getSheet();
+        row = e.range.getRow();
+
+        if (row < 2) {
+            sheet.deleteRow(row);
+            return;
+        }
+
         sheet.getRange(row, CONFIG.ID + 1).setValue(row - 1);
+
         const timestampCell = sheet.getRange(row, CONFIG.TIMESTAMP + 1);
         timestampCell.setValue(new Date());
 
@@ -218,8 +224,15 @@ function onFormSubmit(e) {
             }
         }
 
+        SpreadsheetApp.flush();
+
     } catch (error) {
-        sheet.deleteRow(row);
+        if (sheet && row) {
+            sheet.deleteRow(row);
+        }
+
+    } finally {
+        lock.releaseLock();
     }
 }
 
