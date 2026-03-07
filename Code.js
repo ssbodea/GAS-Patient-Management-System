@@ -5,7 +5,7 @@ const CONFIG = {
     AM_S_ABSENTA: 23, AM_V_ABSENTA_1: 24, AM_V_ABSENTA_2: 25, AM_S_SPORT: 26, AM_V_SPORT: 27, AM_ALT_SCOP: 28, AM_BURSA_MEDICALA: 29, AE_AVIZ_EPIDEMIOLOGIC: 30,
     EB_INALTIME: 31, EB_GREUTATE: 32, EB_IMC: 33, EB_CODURI_BOALA: 34,
     COLUMN_COUNT: 35,
-    ALLOWED_EMAILS: ["ss.bodea@gmail.com", "agent07.marius@gmail.com", "qmaedica@gmail.com"],
+    ALLOWED_EMAILS: ["your-email@gmail.com"]
 };
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -262,7 +262,7 @@ function doGet() {
 
 function loadPatientData() {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
         if (lastRow <= 1) {
@@ -321,7 +321,7 @@ function loadPatientData() {
 
 function savePatientData(patientData) {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
 
@@ -400,7 +400,7 @@ function savePatientData(patientData) {
 
 function searchPatientData(searchTerm) {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
 
         const sheet = getSheet();
         const lastRow = sheet.getLastRow();
@@ -473,7 +473,7 @@ function searchPatientData(searchTerm) {
 
 function exportPatientData(startDate, endDate) {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
 
         const firstRow = findRowByDateTime(startDate, true);
         const lastRow = findRowByDateTime(endDate, false);
@@ -583,7 +583,7 @@ function exportPatientData(startDate, endDate) {
 
 function reportPatientData(startDate, endDate) {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
 
         const startTime = Date.now();
         const userEmail = Session.getActiveUser().getEmail();
@@ -803,7 +803,7 @@ function reportPatientData(startDate, endDate) {
 
 function deletePatientData(password) {
     try {
-        checkUserAuthorization();
+        //checkUserAuthorization();
 
         const correctPassword = PropertiesService.getScriptProperties().getProperty('DELETE_PASSWORD');
         if (!correctPassword) {
