@@ -23,10 +23,20 @@ function getSheet() {
     return sheet;
 }
 
-function formatDateForDisplay(date) {
+function formatDateForDisplay(date, includeTime = false) {
+    if (!date) return '';
+
     const d = String(date.getDate()).padStart(2, '0');
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const y = date.getFullYear();
+
+    if (includeTime) {
+        const h = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        const s = String(date.getSeconds()).padStart(2, '0');
+        return `${d}/${m}/${y} ${h}:${min}:${s}`;
+    }
+
     return `${d}/${m}/${y}`;
 }
 
@@ -46,7 +56,7 @@ function convertRoToIso(roDate) {
 
 function processBtCasForSave(Cod, Specialitate, Tip) {
     const parts = [Cod, Specialitate, Tip].filter(p => p && p.trim());
-    return parts.join(' | ');
+    return parts.join('|');
 }
 
 function parseBtCasForDisplay(fieldValue) {
@@ -142,7 +152,7 @@ function createPatientFromRow(row) {
 
     return {
         id: row[CONFIG.ID] || '',
-        timestamp: row[CONFIG.TIMESTAMP] instanceof Date ? formatDateForDisplay(row[CONFIG.TIMESTAMP]) : '',
+        timestamp: row[CONFIG.TIMESTAMP] instanceof Date ? formatDateForDisplay(row[CONFIG.TIMESTAMP], true) : '',
         name: row[CONFIG.NAME] || '',
         age: row[CONFIG.AGE] || '',
         gender: row[CONFIG.GENDER] || '',
@@ -199,15 +209,12 @@ function onFormSubmit(e) {
         sheet.getRange(row, CONFIG.ID + 1).setValue(row - 1);
         const timestampCell = sheet.getRange(row, CONFIG.TIMESTAMP + 1);
         timestampCell.setValue(new Date());
-        timestampCell.setNumberFormat('dd/mm/yyyy hh:mm:ss');
 
         const lmpValue = e.namedValues['LMP']?.[0];
         if (lmpValue) {
             const lmpDate = new Date(lmpValue);
             if (!isNaN(lmpDate.getTime())) {
-                const lmpCell = sheet.getRange(row, CONFIG.LMP + 1);
-                lmpCell.setValue(lmpDate);
-                lmpCell.setNumberFormat('dd/mm/yyyy');
+                sheet.getRange(row, CONFIG.LMP + 1).setValue(lmpDate);
             }
         }
 
@@ -484,7 +491,7 @@ function exportPatientData(startDate, endDate) {
             const row = filteredData[i];
 
             const timestamp = row[CONFIG.TIMESTAMP];
-            const dateOnly = timestamp instanceof Date ? formatDateForDisplay(timestamp) : '';
+            const dateOnly = timestamp instanceof Date ? formatDateForDisplay(timestamp, true) : '';
 
             let prescriptionsText = '';
 
